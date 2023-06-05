@@ -1,0 +1,463 @@
+Spring boot annotaions
+======================
+1 : @Component Annotation
+-------------------------
+--> The @Component annotaion indicates that an annotated class is a " spring bean / component".
+--> The @Component annotaion tell spring IOC container to automatically create spring bean.
+
+2 : @Autowired Annotation
+-------------------------
+--> The @Autowired annotaion is used " to inject the the bean automatically".
+--> The @Autowired annotaion is used in
+	1 : construction injection
+	2 : setter injection
+	3 : field injection
+	
+Example
+1 :  construction injection
+-----------------------------
+    private VegPizza vegPizza;
+
+    @Autowired
+    public PizzaController(VegPizza vegPizza) {
+        this.vegPizza = vegPizza;
+    }
+
+2 : setter injection
+--------------------
+	private VegPizza vegPizza;
+	 
+    public void setVegPizza(VegPizza vegPizza){
+        this.vegPizza = vegPizza;
+    }
+	
+3 : field injection
+-------------------
+
+    @Autowired
+    private VegPizza vegPizza;
+	
+	
+3 : @Qualifier Annotation
+=========================
+--> @Qualifier annotaion is used in conjunction with Autowired to avoid confusion when we have two or more beans configiured for same type.
+
+exmaple :
+
+// note : by using the "Interface instead of class " we can achived a loose coupling
+//    here Pizza is an Interface
+//vegPizza is class name : bean name same as class name start with small later
+
+    private final Pizza pizza;
+
+    @Autowired
+    public PizzaController(@Qualifier("vegPizza") Pizza pizza) {
+        this.pizza = pizza;
+    }
+	
+4 : @Primary Annotation
+=======================
+--> we use @primary annotaion to give "higher preference to bean when there are mmultiple beans of the same type.
+--> @Primary annotaion is alternate of @Qualifier annotaion	
+--> @Primary annotaion used on class level
+
+@Component
+@Primary
+public class VegPizza implements Pizza {
+    @Override
+    public String getPizza() {
+        return "veg Pizza";
+    }
+
+}
+
+5 : @Bean annotaion
+-------------------
+--> @Bean annotaion indicates that a method produces to be managed by the spring container.
+--> The @Bean annotaion is uuually declared in configuration class to create spring Bean definitions.
+--> we can define spring bean the configuration class @Configuration
+
+--> by default the bean name is same as method name
+--> we can specify bean name using @Bean(name="BeanName").
+
+--> @Bean annotaion provides "initMethod and destroyMethod attribute" to perform certain actions after bean initilization or before bean destruction by a container.
+ 
+ @Bean(initMethod = "init" , destroyMethod = "destroy")
+ 
+ 
+6 : Stereotype annotaion
+====================
+--> spring provides three types of Stereotype annotaion
+1 : @Service
+2 : @Repository
+3 : @Controller
+
+--> These annotaion are used to create spring bean automatically in the application context(Spring IOC container).
+--> The main stereotype annotaion is " @Component ".
+--> By using this annotaion , spring provides more stereotype meta annotaion susch as @Service , @Repository , @Controller
+
+--> @Service annotaion is used to create spring bean at the Service layer
+--> @Repository annotaion is used to create spring bean for the repositories at the DAO layer.
+--> @Controller annotaion is used to create spring bean at the Controller layer
+ 
+controller : in the controller class we write a logic to handle the "Http Request".
+service : in the service class we write the all " Business logic".
+repository : in the repository class we we
+
+ 
+7: @Lazy annotaion : load the class on-demand
+==================
+--> by Default spring creates " all singleton bean eagerly " at the startup / bootstrapping ofthe application context.
+--> you can load the spring bean lazily ( on-demand) using @Lazy annotaion.
+--> @Lazy annotaion can be used with @Configuration , @Component , @Bean annotaion
+
+Q : which initialiion is recommanded Eager or Lazy?
+--> eagerly initilization is recommanded : to avoid and detect all possible error immediately rather than at runtime.
+
+8 : @Scope annotaion
+====================
+--> The latest version of the spring framework defines 6 types of scopes:
+1 : singleton
+2 : prototype
+3 : request
+4 : session
+5 : application
+6 : websocket
+
+--> the request, session, application, websocket are only available in a web-aware application.
+
+@Scope:
+======
+1: @Scope annotaion is used to define a scope of the bean.
+2: we use @Scope to define the scope of a @Component class or a @Bean definition.
+
+1 : singleton
+-------------
+--> singleton scope is only one instance of the bean is created and shared across the entire application.
+--> singleton scope is the Default scope.
+--> it is return the same bean u can request mutiple time also.
+
+exmaple :
+
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class SingletoneBean {
+    public SingletoneBean()
+    {
+        System.out.println("SingletoneBean .... ");
+    }
+}
+
+note : if u not annotated as class As @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+it is also provide same result 
+
+2 : prototype
+-------------
+--> a new instance of the bean is created every time it is request.
+
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class PrototypeBean {
+    public PrototypeBean(){
+        System.out.println("PrototypeBean ....");
+    }
+}
+
+result :
+========
+
+@SpringBootApplication
+public class RedisApplication {
+
+	public static void main(String[] args) {
+		 ConfigurableApplicationContext context = SpringApplication.run(RedisApplication.class, args);
+
+		SingletoneBean singletoneBean = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean.hashCode());
+		
+		SingletoneBean singletoneBean1 = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean1.hashCode());
+		
+		SingletoneBean singletoneBean2 = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean2.hashCode());
+
+		PrototypeBean prototypeBean = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean.hashCode());
+		
+		PrototypeBean prototypeBean1 = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean1.hashCode());
+		
+		PrototypeBean prototypeBean2 = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean2.hashCode());
+
+	}
+
+9 : @Value Annotation
+=====================
+--> @Value annotaion is used to assign a default values to variables and method arguments.
+--> @Value annotaion is mostly used to get value for specific property key from properties file.
+--> we can read spring environment variables as well as system variables using @Value annotaion.
+
+1 : assign default value to a variables using @Value annotaion
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("Tanveer")
+    private String defaultName;
+
+}
+
+2 : get the value from application.properties using @Value("${key}")
+# key = value
+mail.host = gmail.com
+mail.email = tas@gmail.com
+mail.password= 1999
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("${mail.host}")
+    private String host;
+	
+    @Value("${mail.email}")
+    private String email;
+	
+    @Value("${mail.password}")
+    private Integer password;
+
+}
+
+3: get the value from environment variable and system variable using @Value annotaion
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("${java.home}")
+    private String javaHome;
+
+    @Value("${HOME}")
+    private String homeDir;
+ }
+ 
+ 
+10 : @PropertySource Annotation
+===============================
+--> @PropertySource annotaion is used to provide properties file to Spring Environment.
+--> this annotaion is used with @Configuration class
+--> @PropertySource annotaion is repeatable , means you can have mutiple PropertySource on a Configuration class
+--> we can used @Value annotaion and Environment class to read the property file.
+
+*************** 
+using  @PropertySource("classpath:<properties_filr_name>")
+
+*******************************
+
+Q : how to read custom properties file
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySource("classpath:mail.properties")
+@PropertySource("classpath:message.properties")
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+
+@Component
+@Getter
+public class PropertySourceDemo {
+
+    @Value("${gmail.host}")
+    private String host;
+	
+    @Value("${gmail.email}")
+    private String email;
+	
+    @Value("${gmail.password}")
+    private String password;
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.description}")
+    private String appDescription;
+
+}
+
+
+Q : how to read the cutom properties file using a Environment Object?
+
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySource("classpath:mail.properties")
+@PropertySource("classpath:message.properties")
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+--> create a instance of Environment class 
+--> used the getter for all the feild
+
+@Component
+public class EnvironmentPojoToRead {
+    @Autowired
+    private Environment environment;
+	
+    private String host;
+    private String email;
+    private String password;
+    private String appName;
+    private String appDescription;
+
+    public String getHost() {
+        return environment.getProperty("gmail.host");
+    }
+
+    public String getEmail() {
+        return environment.getProperty("gmail.email");
+    }
+
+    public String getPassword() {
+        return environment.getProperty("gmail.password");
+    }
+
+    public String getAppName() {
+        return environment.getProperty("app.name");
+    }
+
+    public String getAppDescription() {
+        return environment.getProperty("app.description");
+    }
+}
+
+11 : @PropertySources Annotation
+================================
+--> @PropertySources annotaion is used to provide mutiple properties file to Spring Environment.
+--> this annotaion is used with @Configuration class
+
+*************** 
+using @PropertySources({
+		@PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+		})
+*******************************
+
+Q : how to read custom properties file
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySources({
+        @PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+})
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+
+@Component
+@Getter
+public class PropertySourceDemo {
+
+    @Value("${gmail.host}")
+    private String host;
+	
+    @Value("${gmail.email}")
+    private String email;
+	
+    @Value("${gmail.password}")
+    private String password;
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.description}")
+    private String appDescription;
+
+}
+
+
+Q : how to read the cutom properties file using a Environment class?
+
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySources({
+        @PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+})
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+--> create a instance of Environment class 
+--> used the getter for all the feild
+
+@Component
+public class EnvironmentPojoToRead {
+    @Autowired
+    private Environment environment;
+	
+    private String host;
+    private String email;
+    private String password;
+    private String appName;
+    private String appDescription;
+
+    public String getHost() {
+        return environment.getProperty("gmail.host");
+    }
+
+    public String getEmail() {
+        return environment.getProperty("gmail.email");
+    }
+
+    public String getPassword() {
+        return environment.getProperty("gmail.password");
+    }
+
+    public String getAppName() {
+        return environment.getProperty("app.name");
+    }
+
+    public String getAppDescription() {
+        return environment.getProperty("app.description");
+    }
+}
