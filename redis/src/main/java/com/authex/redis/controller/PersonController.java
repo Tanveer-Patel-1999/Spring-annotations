@@ -66,7 +66,6 @@ public class PersonController {
     public ResponseEntity<Person> requestParamDemo(@RequestParam(name = "id") Long id,
                                                    @RequestParam(name = "name") String name,
                                                    @RequestParam(name = "age") Integer p_age){
-
         Person person = new Person();
         person.setId(id);
         person.setName(name);
@@ -76,3 +75,4 @@ public class PersonController {
     }
 
 }
+

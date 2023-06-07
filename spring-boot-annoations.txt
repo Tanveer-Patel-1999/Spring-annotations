@@ -670,6 +670,23 @@ Q : 200 status code
 4 : 204 : NO CONTENT
 5 : 206 : PARTIAL CONTENT
 
+Q : 400 status code
+===================
+1 : 400 : Bad Request
+2 : 401 : Unauthorized
+3 : 403 : Forbidden
+4 : 404 : Not Found
+5 : 405 : Method Not Allowed:
+6 : 415 : Unsupported Media Type
+
+Q : 500 status code
+====================
+1 : 500 : Internal Server Error
+2 : 501 : Not Implemented
+3 : 502 : Bad Gateway
+4 : 503 : Service Unavailable
+5 : 505 : HTTP Version Not Supported:
+
 20 : @PutMapping Annotation
 ===========================
 --> The PUT HTTP method is used to update a resource.
