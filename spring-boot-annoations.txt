@@ -875,3 +875,35 @@ Validation Annotations:-->
 6 : @Pattern: 
 =============
 --> Validates that a field matches the specified regular expression.
+
+
+Q : What are embedded containers support by Spring.
+Spring Boot support the main three embedded containers:
+
+1) Tomcat
+2) Jetty
+3) Undertow.
+
+By default, it uses Tomcat as an embedded container.
+
+Q : How can you connect Spring Boot to the database using JPA?
+Spring Boot supports spring-boot-data-JPA start, which helps you to 
+connect spring application with a relational database.
+
+Q : Difference between @RestController and @controller in the spring boot ?
+-> TO answer this we first understand the difference between a web application and a REST APi
+
+Its that the response from a web application is generally view (HTML + CSS + JAVASCRIPT)
+beacuse they are intended for human viewers while Rest Api just return data in form of JSON
+or XML because most of the REST clients are programs
+
+same goes with @Restcontroller and @controller annotations
+
+--> @controller map of the model object to view or template and makes it human readable.
+--> @RestController simply returns the object and object data is directly written into
+HTTP rsponse as JSON or XML.
+
+Q :How to use a property defined in application.properties file into your java class ?
+-> Use the @Value annotation to access the properties which is defined in the application.properties file
+-> @Value ("${custom.value}")
+-> private String customVal

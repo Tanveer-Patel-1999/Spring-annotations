@@ -868,6 +868,10 @@ Validation Annotations:-->
 ========
 --> Validates that a numeric field is less than or equal to the specified maximum value.
 
+5 : @Email:
+==========
+--> Validates that a field is a well-formed email address.
 
-5 : @Email: Validates that a field is a well-formed email address.
-6 : @Pattern: Validates that a field matches the specified regular expression.
+6 : @Pattern: 
+=============
+--> Validates that a field matches the specified regular expression.
