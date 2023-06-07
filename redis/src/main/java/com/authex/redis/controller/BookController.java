@@ -4,8 +4,11 @@ import com.authex.redis.model.Book;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+//@Controller
+//@ResponseBody
+@RestController
 public class BookController {
 
 /*    us must required three annotations
@@ -14,13 +17,13 @@ public class BookController {
 3 : @ResponseBody : it is used to convert the return type of the method into JSON format and JSON into HTTP response Object
  */
     @RequestMapping("/hello")
-    @ResponseBody
+//    @ResponseBody
     public String helloWorld(){
         return "hello from bookController....";
     }
 
     @RequestMapping("/book")
-    @ResponseBody
+//    @ResponseBody
     public Book getBook(){
         Book book = new Book(1L, "java","core java");
         return book;
